@@ -1,0 +1,22 @@
+{
+  "name": "smartirrigationsystem",
+  "version": "1.0.0",
+  "description": "https://github.com/Wissalhamhoum/smart_irrigation_system.git",
+  "main": "main/app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "smart_irrigation_system"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "^0.28.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.1.1",
+    "mongoose-unique-validator": "^3.0.0"
+  }
+}
