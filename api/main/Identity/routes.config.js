@@ -17,7 +17,7 @@ const   Master = config.permissionLevels.Master,
         validityTime = config.jwtValidityTimeInSeconds;
 
 exports.routesConfig = function (app) {
-    app.post('/users',
+    app.post('/auth/signup',
         [
             passport.authenticate('signUp', { session: false }),
             async (req, res, next) => {
@@ -28,13 +28,13 @@ exports.routesConfig = function (app) {
     );
 
     app.get('/users', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }),
         AuthorizationPermission.minimumPermissionLevelRequired(Member),
         IdentityProvider.list
     ]);
 
     app.get('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }),
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
         IdentityProvider.getById
@@ -48,7 +48,7 @@ exports.routesConfig = function (app) {
      * Thus this is a privileged action done only by administrator
      */
     app.put('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }),
         AuthorizationPermission.minimumPermissionLevelRequired(Master),
         AuthorizationPermission.sameUserCantDoThisAction,
         IdentityProvider.putById
@@ -62,59 +62,23 @@ exports.routesConfig = function (app) {
      * Thus only same user or admin can patch without changing identity permission level.
      */
     app.patch('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }),
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
         IdentityProvider.patchById
     ]);
     app.delete('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }),
         AuthorizationPermission.minimumPermissionLevelRequired(Master),
         AuthorizationPermission.sameUserCantDoThisAction,
         IdentityProvider.removeById
     ]);
+
 
     /*app.post('e/authoriz', async (req,res,next) => {
         //TODO add PKCE FLOW
 
     });*/
 
-    app.post('/oauth/token',
-        async (req, res, next) => {
-            passport.authenticate(
-                'signIn',
-                async (err, user, info) => {
-                    try {
-                        if (err || !user) {
-                            return next(err);
-                        }
-                        req.login(
-                            user,
-                            { session: false },
-                            async (error) => {
-                                if (error) return next(error);
-                                const now = Math.floor(Date.now() / 1000),
-                                    body = {
-                                        iss: iss,
-                                        aud: aud,
-                                        sub: user.username,
-                                        name: user.fullName,
-                                        userId: user._id,
-                                        roles: user.permissionLevel,
-                                        jti: uuidv4(),
-                                        iat: now,
-                                        exp: now+validityTime
-                                    };
-                                const token = jwt.sign({ user: body }, privateKey,{ algorithm: 'RS512'});
-
-                                return res.json({ token });
-                            }
-                        );
-                    } catch (error) {
-                        return next(error);
-                    }
-                }
-            )(req, res, next);
-        }
-    );
+    
 };

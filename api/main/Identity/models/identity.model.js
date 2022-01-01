@@ -11,19 +11,23 @@ exports.findByUsername = (username) => {
 
 exports.triggerLogin = (username, password) => {
     Identity.attemptAuthenticate(username, password, (err,identity,reason) => {
+        
         if (err) throw err;
         // login was successful if we have an identity
         if (identity) {
+            console.log(identity)
             return identity;
         }
         // otherwise we can determine why we failed
         const reasons = Identity.failedLogin;
+        console.log(reasons)
         switch (reason) {
             case reasons.NOT_FOUND:
             case reasons.PASSWORD_INCORRECT:
-                throw new Error('Sign In failed');
+                //throw new Error('Sign In failed');
+                console.log('signIn error')
             case reasons.MAX_ATTEMPTS:
-                throw new Error('Account temporarily locked');
+                //throw new Error('Account temporarily locked');
         }
     });
 }
@@ -47,7 +51,7 @@ exports.createIdentity = (identityData) => {
     return identity.save();
 };
 
-exports.list = (perPage, page) => {
+exports.listOfUsers = (perPage, page) => {
     return new Promise((resolve, reject) => {
         Identity.find()
             .limit(perPage)

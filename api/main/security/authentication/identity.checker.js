@@ -29,6 +29,7 @@ exports.hasAuthValidFields = (req, res, next) => {
 exports.isPasswordAndUserMatch = async (req, res, next) => {
     IdentityModel.findByEmail(req.body.email)
         .then(async (user)=>{
+            console.log("me validating password now plz wait")
             if(!user[0]){
                 res.status(404).send({});
             }else{
@@ -36,8 +37,8 @@ exports.isPasswordAndUserMatch = async (req, res, next) => {
                 if (await argon2.verify(user[0].password, req.body.password)) {
                     var now = Math.floor(Date.now() / 1000);
                     req.body = {
-                        iss: 'urn:smartirrigationsystem.me',
-                        aud: 'urn:'+(req.get('origin')?req.get('origin'):"smartirrigationsystem.me"),
+                        //iss: 'urn:smartirrigationsystem.me',
+                        //aud: 'urn:'+(req.get('origin')?req.get('origin'):"smartirrigationsystem.me"),
                         sub: user[0].email,
                         name: user[0].firstName + ' ' + user[0].lastName,
                         userId: user[0]._id,

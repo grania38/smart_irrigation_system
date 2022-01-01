@@ -10,6 +10,7 @@ exports.validJWTNeeded = (req, res, next) => {
     if (req.headers['authorization']) {
         try {
             let authorization = req.headers['authorization'].split(' ');
+            console.log(authorization)
             if (authorization[0] !== 'Bearer') {
                 
                 return res.status(401).send();
@@ -18,9 +19,8 @@ exports.validJWTNeeded = (req, res, next) => {
                 var aud = 'urn:'+(req.get('origin')?req.get('origin'):"smartirrigationsystem.me");
                 try{
                     req.jwt = jwt.verify(authorization[1], cert, {issuer:"urn:smartirrigationsystem.me",audience:aud,algorithms: ['RS512']});
-                    // console.log(req.jwt)
                 }catch(err){
-                    // console.log(err)
+                     console.log(err)
                 }
                 
                 return next();

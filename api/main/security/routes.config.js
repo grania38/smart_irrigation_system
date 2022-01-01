@@ -9,8 +9,9 @@ const Master = config.permissionLevels.Master;
 
 exports.routesConfig = function (app) {
     app.post('/auth/signin', [
-        passport.authenticate('signIn', { session: false }),
         IdentityChecker.hasAuthValidFields,
+        //faced some problems with it so we're not using it
+        //passport.authenticate('signIn', { session: false }  ),
         IdentityChecker.isPasswordAndUserMatch,
         Authenticator.login
     ]);

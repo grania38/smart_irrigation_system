@@ -125,7 +125,6 @@ identitySchema.methods.checkPassword = async function(candidatePassword) {
 identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
     this.findOne().byUsername(username).exec((err, identity) => {
         if (err) return cb(err);
-
         // make sure the identity exists
         if (!identity) {
             return cb(null, null, reasons.NOT_FOUND);
@@ -133,6 +132,7 @@ identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
 
         // check if the account is currently locked
         if (identity.isLocked) {
+            console.log(2)
             // just increment login attempts if account is already locked
             return identity.incLoginAttempts(function(err) {
                 if (err) return cb(err);
@@ -142,6 +142,7 @@ identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
         // check if the password is a match
         identity.checkPassword(password).then((isMatch) => {
             if(isMatch){
+                console.log("password matched")
                 // if there's no lock or failed attempts, just return the identity
                 if (!identity.loginAttempts && !identity.lockUntil) return cb(null, identity);
                 // reset attempts and lock info
@@ -157,12 +158,14 @@ identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
             // password is incorrect, so increment login attempts before responding
             identity.incLoginAttempts((err) => {
                 if (err) return cb(err);
+                console.log(4)
                 return cb(null, null, reasons.PASSWORD_INCORRECT);
             });
         }).catch(() => {
             // password is incorrect, so increment login attempts before responding
             identity.incLoginAttempts((err) => {
                 if (err) return cb(err);
+                console.log(5)
                 return cb(null, null, reasons.PASSWORD_INCORRECT);
             });
         });

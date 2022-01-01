@@ -9,7 +9,10 @@ const privateKey = fs.readFileSync(process.env.JWT_KEY || config['jwt-key']);
 
 exports.login = (req, res) => {
     try {
+        console.log("hi")
+        console.log(refreshSecret)
         let refreshId = req.body.userId + refreshSecret + req.body.jti;
+        console.log(refreshId)
         let salt = crypto.randomBytes(16).toString('base64');
         let hash = crypto.createHmac('sha512', salt).update(refreshId).digest("base64");
         

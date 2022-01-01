@@ -1,8 +1,8 @@
 
 module.exports = {
-    'app endpoint': "smartirrigationsystem.me",
-    'key-file' : '/etc/letsencrypt/live/smartirrigationsystem.me/privkey.pem',
-    'cert-file': '/etc/letsencrypt/live/smartirrigationsystem.me/fullchain.pem',
+    'app endpoint': "exemple.lcom",
+    'key-file' : 'C:/Users/Wissal HAMHOUM/example.lcom+4-key.pem',
+    'cert-file': 'C:/Users/Wissal HAMHOUM/example.lcom+4.pem',
     'dh-strongfile': './tls/dhparam.pem',
     'jwt-key': './tls/jwtRS256.key',
     'jwt-public-key': './tls/jwtRS256.key.pub',
